@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Project Jimvis</title>
+    <script>
+      (function () {
+        var pathSegmentsToKeep = window.location.hostname.endsWith(".github.io") ? 1 : 0;
+        var l = window.location;
+        var base = l.pathname.split("/").slice(0, 1 + pathSegmentsToKeep).join("/") + "/";
+        sessionStorage.setItem("jimvis_spa_redirect", l.pathname + l.search + l.hash);
+        l.replace(l.origin + base);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
