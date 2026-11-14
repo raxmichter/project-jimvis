@@ -6,6 +6,7 @@ import { Tabs, TabsIndicator, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react
 import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
 import { toast } from "@ui-sdk/react/toast";
 import { Jim, type JimMood } from "@/components/Jim";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/hooks/useAuth";
 import { trpc } from "@/providers/trpc";
 
@@ -108,9 +109,12 @@ export default function Login() {
           <span>jimvis</span>
           <span className="beta-tag">BETA</span>
         </div>
-        <div className="auth-trial-pill">
-          <span className="status-pulse" />
-          <span>7-day free trial · 5 reports</span>
+        <div className="auth-topbar__actions">
+          <div className="auth-trial-pill">
+            <span className="status-pulse" />
+            <span>7-day free trial<span className="auth-trial-pill__extra"> · 5 reports</span></span>
+          </div>
+          <ThemeToggle />
         </div>
       </header>
 

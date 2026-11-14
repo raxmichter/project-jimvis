@@ -1,6 +1,7 @@
-import { Files, MessageSquarePlus, Plus, Settings2, Sparkles, LogOut, ChevronUp } from "lucide-react";
+import { Files, MessageSquarePlus, Moon, Plus, Settings2, Sparkles, LogOut, Sun, ChevronUp } from "lucide-react";
 import { Popover, PopoverClose, PopoverContent, PopoverTitle, PopoverTrigger } from "@ui-sdk/react/popover";
 import type { Report, User } from "@contracts/types";
+import { useTheme } from "@/hooks/useTheme";
 import { Jim } from "./Jim";
 
 const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
@@ -18,6 +19,7 @@ export function WorkspaceSidebar({ reports, currentId, isLibrary = false, usage,
   onLogout: () => void;
 }) {
   const isChatActive = !isLibrary && !currentId;
+  const { theme, toggleTheme } = useTheme();
   return (
     <aside className="workspace-sidebar">
       <div className="sidebar-brand"><Jim size="tiny" /><span>jimvis</span><span className="beta-tag">BETA</span></div>
@@ -52,6 +54,7 @@ export function WorkspaceSidebar({ reports, currentId, isLibrary = false, usage,
           <PopoverContent side="top" align="start" sideOffset={10} className="account-menu">
             <PopoverTitle>{user.email ?? "Project Jimvis account"}</PopoverTitle>
             <PopoverClose className="account-menu__item" onClick={onSettings}><Settings2 size={16} />Workspace settings</PopoverClose>
+            <PopoverClose className="account-menu__item" onClick={toggleTheme}>{theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}{theme === "dark" ? "Light mode" : "Dark mode"}</PopoverClose>
             <PopoverClose className="account-menu__item" onClick={onLogout}><LogOut size={16} />Sign out</PopoverClose>
           </PopoverContent>
         </Popover>

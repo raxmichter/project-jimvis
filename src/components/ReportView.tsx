@@ -155,7 +155,7 @@ export function ReportView({ report, onFollowUp }: { report: Report; onFollowUp:
           </Toggle>
           <Popover open={shareOpen} onOpenChange={setShareOpen}>
             <PopoverTrigger className="secondary-action"><Link2 size={16} aria-hidden="true" />Share</PopoverTrigger>
-            <PopoverContent align="end" className="share-popover">
+            <PopoverContent align="start" className="share-popover">
               <PopoverTitle>Share this brief</PopoverTitle>
               <PopoverDescription>Copy a private link for someone with access to this workspace.</PopoverDescription>
               <button className="primary-button" type="button" onClick={copyLink}><Link2 size={15} />Copy private link</button>

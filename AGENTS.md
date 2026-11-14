@@ -19,3 +19,8 @@ Run all commands from `Project Jimvis/` (the inner project directory containing 
 - `.env` is gitignored; see `.env.example` for optional Kimi OAuth and MySQL variables.
 - **Database**: When `DATABASE_URL` is set, Drizzle ORM (`mysql2`) is used. When `DATABASE_URL` is empty/unset locally, `api/queries/connection.ts` automatically persists users and reports to `.local-data/jimvis-store.json` (gitignored) so local sign-up, sign-in, demo workspaces, report generation, saving, and workspace renaming work with zero external database setup.
 - **Auth**: Supports trial sign-up (`auth.startTrial`), email sign-in (`auth.signIn`), one-click demo (`auth.demo`), and Kimi OAuth (shown on `/login` only when `VITE_KIMI_AUTH_URL` and `VITE_APP_ID` are configured).
+
+## Theming
+- Theme is `data-theme="dark" | "light"` on `<html>`; dark is the default and light is opt-in. The choice persists in `localStorage` under `jimvis_theme` (absent/invalid means dark) and is applied pre-paint by an inline script in `index.html`.
+- All color tokens live in `src/index.css`: `:root` holds the dark values and `:root[data-theme="light"]` overrides them with the light palette. New colors must use these custom properties — never hard-code `oklch()`/hex values in routed CSS.
+- Switching is handled by `src/hooks/useTheme.ts` (`useTheme`, `setTheme`) and `src/components/ThemeToggle.tsx`; surfaces also expose it via the workspace settings dialog (`.theme-segment`) and the sidebar account menu.

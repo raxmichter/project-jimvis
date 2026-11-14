@@ -1,15 +1,17 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { ArrowLeft, ArrowRight, Bookmark, FileText, Library, Menu, Plus, Search, Settings2, Sparkles, X, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, FileText, Library, Menu, Moon, Plus, Search, Settings2, Sparkles, Sun, X, Zap } from "lucide-react";
 import { Dialog, DialogBackdrop, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@ui-sdk/react/dialog";
 import { toast } from "@ui-sdk/react/toast";
 import type { ReportKind } from "@contracts/report";
 import { PROMPT_EXAMPLES } from "@contracts/report";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 import { trpc } from "@/providers/trpc";
 import { Composer } from "@/components/Composer";
 import { Jim } from "@/components/Jim";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
 
 const ReportView = lazy(() => import("@/components/ReportView").then((module) => ({ default: module.ReportView })));
@@ -35,7 +37,7 @@ function GenerationView({ prompt, step }: { prompt: string; step: number }) {
       <div className="generation-center">
         <div className="thinking-space"><span className="thinking-ring thinking-ring--one" /><span className="thinking-ring thinking-ring--two" /><Jim size="large" mood="thinking" /></div>
         <AnimatePresence mode="wait">
-          <motion.div key={step} className="generation-copy" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+          <motion.div key={step} className="generation-copy" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.16 }}>
             <span className="section-label">JIM IS THINKING · 0{step + 1}/04</span>
             <h1>{generationSteps[step].title}</h1>
             <p>{generationSteps[step].detail}</p>
@@ -103,6 +105,7 @@ export default function Workspace() {
   const location = useLocation();
   const navigate = useNavigate();
   const utils = trpc.useUtils();
+  const { theme, setTheme } = useTheme();
   const [prompt, setPrompt] = useState("");
   const [creating, setCreating] = useState(false);
   const [pendingPrompt, setPendingPrompt] = useState("");
@@ -194,6 +197,7 @@ export default function Workspace() {
           <button className="mobile-menu-button" type="button" onClick={() => setDrawerOpen(true)} aria-label="Open navigation"><Menu size={21} /></button>
           <div className="topbar-context">{isLibrary ? <><Library size={16} /><span>Library</span></> : currentReport ? <><button type="button" onClick={newReport}><ArrowLeft size={15} />Chat</button><span>/</span><strong>{currentReport.title}</strong></> : <><span className="status-pulse" /><strong>Jim is ready</strong></>}</div>
           <button className="topbar-trial" type="button" onClick={() => setUpgradeOpen(true)}><Sparkles size={14} /><span>{Math.max(0, usage.limit - usage.used)} free reports left</span></button>
+          <ThemeToggle className="topbar-theme" />
           <button className="topbar-settings" type="button" onClick={() => setSettingsOpen(true)} aria-label="Workspace settings"><Settings2 size={18} /></button>
         </header>
         <div className="workspace-scroll" ref={scrollRef}>
@@ -211,6 +215,13 @@ export default function Workspace() {
           <form onSubmit={(event) => { event.preventDefault(); updateName.mutate({ name: profileName }); }}>
             <label className="field-label" htmlFor="profile-name">Display name</label>
             <input id="profile-name" className="text-input" value={profileName} onChange={(event) => setProfileName(event.target.value)} minLength={2} maxLength={60} required />
+            <div className="settings-appearance">
+              <span className="field-label" id="appearance-label">Appearance</span>
+              <div className="theme-segment" role="group" aria-labelledby="appearance-label">
+                <button type="button" className={theme === "dark" ? "is-active" : ""} aria-pressed={theme === "dark"} onClick={() => setTheme("dark")}><Moon size={15} aria-hidden="true" />Dark</button>
+                <button type="button" className={theme === "light" ? "is-active" : ""} aria-pressed={theme === "light"} onClick={() => setTheme("light")}><Sun size={15} aria-hidden="true" />Light</button>
+              </div>
+            </div>
             <div className="settings-plan"><span>Free trial</span><strong>{usage.used} of {usage.limit} reports created</strong><small>{usage.daysRemaining} days remaining · no payment method connected</small></div>
             <div className="dialog-actions"><DialogClose className="secondary-action">Cancel</DialogClose><button className="primary-button" type="submit" disabled={updateName.isPending || profileName.trim().length < 2}>{updateName.isPending ? "Saving…" : "Save changes"}</button></div>
           </form>
