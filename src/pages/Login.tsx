@@ -65,9 +65,9 @@ export default function Login() {
     return () => window.clearInterval(timer);
   }, [reduceMotion, focusedField]);
 
-  const onAuthSuccess = async (welcomeMsg: string) => {
+  const onAuthSuccess = async (welcomeMsg?: string) => {
     await utils.invalidate();
-    toast.success(welcomeMsg);
+    if (welcomeMsg) toast.success(welcomeMsg);
     navigate("/app", { replace: true });
   };
 
@@ -82,7 +82,7 @@ export default function Login() {
   });
 
   const demo = trpc.auth.demo.useMutation({
-    onSuccess: () => onAuthSuccess("Demo workspace ready"),
+    onSuccess: () => onAuthSuccess(),
     onError: () => toast.error("Demo workspace couldn’t open. Please try again."),
   });
 
